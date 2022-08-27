@@ -2,9 +2,14 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+include = [
+  "rouse.py" # Have to explicitly include single module
+]
+
 [project]
 name = "rouse"
-version = "0.0.0"
+version = "0.0.1"
 authors = [
   { name="Simon Grosse-Holz", email="sgh256@mit.edu" }
 ]
