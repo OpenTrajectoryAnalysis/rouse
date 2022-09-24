@@ -30,6 +30,8 @@ author = 'Simon Grosse-Holz'
 extensions = [
         'sphinx.ext.autodoc',
         'sphinx.ext.napoleon',
+        'nbsphinx',
+        'sphinx.ext.mathjax',
 ]
 
 autodoc_member_order = 'bysource'
@@ -39,6 +41,19 @@ napoleon_include_special_with_doc = True
 napoleon_use_param = True
 napoleon_use_rtype = False
 
+nbsphinx_execute = 'auto'
+nbsphinx_prompt_width = "0"
+nbsphinx_prolog = """
+.. raw:: html
+
+    <style>
+        .nbinput .prompt,
+        .npoutput .prompt {
+            display: none;
+        }
+    </style>
+"""
+
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']
 
@@ -47,6 +62,7 @@ napoleon_use_rtype = False
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+default_role = 'py:obj'
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -58,4 +74,4 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# html_static_path = ['_static']

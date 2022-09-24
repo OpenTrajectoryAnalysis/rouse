@@ -20,15 +20,15 @@ class Model:
 
     This model follows the linear Langevin equation
 
-    .. math:: \dot{x}(t) = Ax(t) + F + \xi(t)\,,
+    .. math:: \dot{x}(t) = -kAx(t) + F + \xi(t)\,,
 
     where :math:`x` is a vector of monomer positions and :math:`\xi` is
-    Gaussian white noise of strength proportional `D` driving the system. The
-    connectivity matrix :math:`A` describes which monomers are connected to
-    which by harmonic bonds with spring constant `k`. The connectivity matrix
-    is conveniently set up using `setup_free_chain` and `add_crosslinks`.
-    Finally, :math:`F` can be used to incorporate an external force on
-    individual monomers.
+    Gaussian white noise of strength proportional to `D` driving the system.
+    The connectivity matrix :math:`A` describes which monomers are connected to
+    which by harmonic bonds with spring constant :math:`k`. The connectivity
+    matrix is conveniently set up using `setup_free_chain` and
+    `add_crosslinks`.  Finally, :math:`F` can be used to incorporate an
+    external force on individual monomers.
 
     This model implementation provides the following functionality:
 
@@ -84,11 +84,12 @@ class Model:
     # --------
     # Since A is singular in many use cases, getting the numerics straight
     # requires some thought. Also some conceptual points such as "what's the
-    # right steady state?" might become somewhat tricky. The numerical issue is
-    # actually not limiting in our case: A is always real & symmetric, thus
-    # orthogonally diagonalizable, which eliminates numerical issues with the
-    # eigendecomposition (Moler & van Loan, 1978: "19 dubious ways ..."). This
-    # should thus be the method of choice. Thus:
+    # right steady state?" might become somewhat tricky.
+    # 
+    # The numerical issue is actually not limiting in our case: A is always
+    # real & symmetric, thus orthogonally diagonalizable, which eliminates
+    # numerical issues with the eigendecomposition (Moler & van Loan, 1978: "19
+    # dubious ways ..."). This should thus be the method of choice. Thus:
     #
     # - propagation requires M <-- B.M + G, C <-- B.C.B^T + Σ with B =
     #   exp(-k*A*dt). Following the above, we calculate B via EV decomposition.
@@ -103,7 +104,6 @@ class Model:
     #   This is exactly achieved by the Moore-Penrose pseudo-inverse of A,
     #   which we get from the EV decomposition by setting 1/λ = 0 for all
     #   vanishingly small eigenvalues λ.
-    #
     # - for multiplication D.X, where D is diagonal with diagonal vector d and
     #   X is arbitrary, use D.X = d[:, None]*X. Similarly X.D = X*d[None, :]
     #   and consequently Y.D.X = (Y*d[None, :]) @ X

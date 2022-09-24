@@ -8,5 +8,7 @@
 Welcome to rouse's documentation!
 =================================
 
-.. automodule:: rouse
-   :members:
+.. toctree::
+
+   examples
+   rouse
