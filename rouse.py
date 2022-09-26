@@ -201,7 +201,7 @@ class Model:
             self.A[link[1], link[0]] -= myk_rel
             self.A[link[1], link[1]] += myk_rel
 
-    def add_tether(self, mon=0, k_rel=1., point=(0., 0., 0.)):
+    def add_tether(self, mon=0, k_rel=1., point=None):
         """
         Tether a monomer to a fixed point in space
 
@@ -215,17 +215,22 @@ class Model:
             the index of the monomer that should get the tether
         k_rel : float > 0, optional
             strength of the tether, in multiples of the default bond strength `!k`.
-        point : (d,) array-like
-            the point to tether to
+        point : (d,) array-like, optional
+            the point to tether to; defaults to the origin
 
         See also
         --------
         add_bonds
         """
+        if point is None:
+            point = np.zeros(self.d)
+        else:
+            point = np.asarray(point)
+
         self._dynamics['needs_updating'] = True
         
         self.A[mon, mon] += k_rel
-        self.F[mon] += k_rel * np.asarray(point)
+        self.F[mon] += k_rel * point
 
     def update_dynamics(self, dt=1.):
         """
