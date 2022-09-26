@@ -27,7 +27,7 @@ class Model:
     The connectivity matrix :math:`A` describes which monomers are connected to
     which by harmonic bonds with spring constant :math:`k`. The connectivity
     matrix is conveniently set up using `setup_free_chain` and
-    `add_crosslinks`.  Finally, :math:`F` can be used to incorporate an
+    `add_bonds`.  Finally, :math:`F` can be used to incorporate an
     external force on individual monomers.
 
     This model implementation provides the following functionality:
@@ -64,7 +64,7 @@ class Model:
         ensembles / evolution of single conformation).
     add_bonds : list of bonds
         shortcut for adding bonds to the system before initializing dynamics.
-        Corresponds to the `!links` argument of `add_crosslinks`, see there for
+        Corresponds to the `!links` argument of `add_bonds`, see there for
         more details.
     """
     # Implementation notes
@@ -123,7 +123,7 @@ class Model:
 
         self.setup_free_chain(d)
         if add_bonds is not None:
-            self.add_crosslinks(add_bonds)
+            self.add_bonds(add_bonds)
 
         if setup_dynamics:
             self.update_dynamics()
@@ -163,7 +163,7 @@ class Model:
 
         See also
         --------
-        add_crosslinks, add_tether
+        add_bonds, add_tether
         """
         self._dynamics['needs_updating'] = True
 
@@ -174,7 +174,7 @@ class Model:
         
         self.F = np.zeros((self.N, d))
 
-    def add_crosslinks(self, links, k_rel=1.):
+    def add_bonds(self, links, k_rel=1.):
         """
         Add additional bonds to connectivity matrix
 
@@ -220,7 +220,7 @@ class Model:
 
         See also
         --------
-        add_crosslinks
+        add_bonds
         """
         self._dynamics['needs_updating'] = True
         
@@ -234,7 +234,7 @@ class Model:
         This sets the model up for evaluation of model dynamics, such as
         evolving a conformation or propagating an ensemble. It should be called
         after any modification to model parameters, which is handled
-        automatically for internal modifications (such as when `add_crosslinks`
+        automatically for internal modifications (such as when `add_bonds`
         is called). If you modify anything externally, recommended behavior is
         to simply set ``model._dynamics['needs_updating'] = True``, which will
         ensure that stuff is recalculated as needed.
