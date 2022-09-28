@@ -9,6 +9,7 @@ Welcome to rouse's documentation!
 =================================
 
 .. toctree::
+   :maxdepth: 2
 
    examples
    rouse
