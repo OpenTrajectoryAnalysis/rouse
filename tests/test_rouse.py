@@ -41,6 +41,8 @@ class TestModel(myTestCase):
         mod.update_dynamics()
         mod.add_tether(0, 1, 0)
         mod.update_dynamics()
+        mod.add_tether()
+        mod.update_dynamics()
 
     def test_operators(self):
         self.assertTrue(self.model == self.model_nosetup)
@@ -95,8 +97,8 @@ class TestModel(myTestCase):
         conf = self.model.evolve(conf)
         self.assertTupleEqual(conf.shape, (5,3))
 
-    def test_contact_probability(self):
-        hic = self.model.contact_probability()
+    def test_contact_frequency(self):
+        hic = self.model.contact_frequency()
         self.assertEqual(np.sum(np.isinf(hic)), 5)
         self.assert_array_equal(np.round(np.diagonal(hic, 1), 10), [1, 1, 1, 1])
         self.assert_array_equal(np.round(np.diagonal(hic, 1), 10), np.round(np.diagonal(hic, -1), 10))
@@ -105,6 +107,7 @@ class TestModel(myTestCase):
         dts = np.array([0, 1, 10, 100, np.inf])
         msd = self.model.MSD(dts, w=[0, 1, 0, -1, 0])
         self.assert_array_equal(np.round(msd[[0, -1]], 10), [0, 2*3*2]) # correct values?
+        self.assertAlmostEqual(msd[-1], self.model.MSD(np.inf, w=[0, 1, 0, -1, 0]))
 
         # The better check for correct values: do MSD and ACF match?
         # (these are computed along separate paths)
@@ -112,6 +115,7 @@ class TestModel(myTestCase):
         comp = msd - 2*(acf[0] - acf)
         comp[np.abs(comp) < 1e-10] = 0
         self.assert_array_equal(comp, np.zeros_like(comp))
+        self.assertAlmostEqual(acf[-1], self.model.ACF(np.inf, w=[0, 1, 0, -1, 0]))
 
         # If there's no steady state
         msd = self.model.MSD(dts[:-1], w=[0, 0, 1, 0, 0])
@@ -144,8 +148,7 @@ class TestModel(myTestCase):
         self.assertEqual(ts['t_microscopic'], 1)
         self.assertAlmostEqual(ts['t_equilibration']/ts['t_Rouse'], np.pi**3/4)
 
-        self.assertEqual(self.model.Gamma_2loci() / self.model.Gamma(), 2)
-
+        self.assertAlmostEqual(self.model.Gamma(), 6/np.sqrt(np.pi))
         self.assertAlmostEqual(self.model.rms_Ree()**2, 12)
         self.assertAlmostEqual(self.model.rms_Ree(L=3)**2, 9)
 
@@ -154,6 +157,7 @@ class TestMSDfun(myTestCase):
         msd = rouse.twoLocusMSD([0, 1, np.inf], 1, 1)
         self.assertEqual(msd[0], 0)
         self.assertEqual(msd[-1], 2)
+        self.assertEqual(rouse.twoLocusMSD(np.inf, 1, 1), 2)
 
         with self.assertRaises(ValueError):
             _ = rouse.twoLocusMSD([-1], 1, 1)

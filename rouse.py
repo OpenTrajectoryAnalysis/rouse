@@ -620,6 +620,8 @@ class Model:
         ... msd_inf = model.MSD([np.inf], w)
         """
         dts = np.asarray(dts)
+        if len(dts.shape) == 0:
+            dts = dts[None] # make 1D
         if np.any(dts < 0):
             raise ValueError("dt should be >= 0")
 
@@ -670,7 +672,7 @@ class Model:
             E = np.empty(len(evs), dtype=float)
             if finite:
                 E[evs_nz] = (1-np.exp(-dt*k_evs_nz)) * dDk_evs_nz
-                E[evs_z ] = dt
+                E[evs_z ] = 2*self.d*self.D*dt
             else:
                 # We checked before that in this case the evs == 0 dof are
                 # irrelevant anyways
@@ -723,6 +725,8 @@ class Model:
         MSD
         """
         dts = np.asarray(dts)
+        if len(dts.shape) == 0:
+            dts = dts[None] # make 1D
         if np.any(dts < 0):
             raise ValueError("dt should be >= 0")
 
@@ -781,19 +785,6 @@ class Model:
         """
         return 2*self.d*self.D / np.sqrt(np.pi*self.k)
 
-    def Gamma_2loci(self):
-        """
-        MSD prefactor for distance between two loci
-
-        This is just ``2*Gamma()``. Mostly serves as a reminder to include that
-        factor of two
-
-        Returns
-        -------
-        float
-        """
-        return 2*self.Gamma()
-
     def rms_Ree(self, L=None):
         """
         RMS end-to-end distance for chain of length L
@@ -813,14 +804,14 @@ class Model:
 
 ####### Auxiliary things
 
-    def contact_probability(self):
+    def contact_frequency(self):
         """
-        Calculate a contact probability matrix for the system
+        Calculate a contact frequency matrix for the system
 
         This is intended to produce HiC-like maps for the system. It is based
         on the mean squared distance between each pair of loci, and then
-        converts to probability by a scaling exponent of ``-self.d/2``. Note
-        that these are not actual probabilities, but relative frequencies
+        converts to contact frequency by a scaling exponent of ``-self.d/2``.
+        Note that these are not actual probabilities, but relative frequencies
 
         Returns
         -------
@@ -860,6 +851,8 @@ def twoLocusMSD(dts, Gamma, J):
         the MSD evaluated at times `!dts`
     """
     dts = np.asarray(dts)
+    if len(dts.shape) == 0:
+        dts = dts[None]
     ind_zero = dts == 0
     ind_finite = np.logical_and(np.isfinite(dts), dts > 0)
     ind_inf = dts == np.inf
