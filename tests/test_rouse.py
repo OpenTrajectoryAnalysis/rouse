@@ -41,8 +41,13 @@ class TestModel(myTestCase):
         mod.update_dynamics()
         mod.add_tether(0, 1, 0)
         mod.update_dynamics()
+
         mod.add_tether()
-        mod.update_dynamics()
+        mod.update_F_only()
+        with self.assertRaises(RuntimeError):
+            mod.check_dynamics(run_if_necessary=False)
+        mod.update_F_only(override_full_update=True)
+        mod.check_dynamics(run_if_necessary=False)
 
     def test_operators(self):
         self.assertTrue(self.model == self.model_nosetup)

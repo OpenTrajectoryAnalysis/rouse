@@ -328,8 +328,8 @@ class Model:
         self._dynamics['G'] = G
         self._dynamics['ss_M'] = self._dynamics['ss_CoD'] @ self.F
 
-        if override_full_update: # pragma: no cover
-            self._dynamics['needs_updating'] = True
+        if override_full_update:
+            self._dynamics['needs_updating'] = False
 
     def check_dynamics(self, dt=None, run_if_necessary=True):
         """
