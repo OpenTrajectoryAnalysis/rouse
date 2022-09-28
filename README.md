@@ -1,8 +1,9 @@
 [![Documentation Status](https://readthedocs.org/projects/rouse/badge/?version=latest)](https://rouse.readthedocs.io/en/latest/?badge=latest)
 
-An implementation of the Rouse model of polymer dynamics. Under construction.
+rouse
+=====
 
-Documentation is hosted at [ReadTheDocs](https://rouse.readthedocs.org/en/latest)
+An implementation of the Rouse model of polymer dynamics. For [example usage](https://rouse.readthedocs.org/en/latest/examples/01_examples.html) and the full [API reference](https://rouse.readthedocs.org/en/latest/rouse.html) visit our documentation at [ReadTheDocs](https://rouse.readthedocs.org/en/latest)
 
 To install `rouse` you can use the latest stable version from [PyPI](https://pypi.org/project/rouse)
 ```sh
