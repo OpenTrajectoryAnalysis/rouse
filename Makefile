@@ -27,6 +27,9 @@ pre-docs :
 docs : pre-docs
 	cd $(SPHINXDIR) && $(MAKE) html
 
+docs-latex : pre-docs
+	cd $(SPHINXDIR) && $(MAKE) latex
+
 tests :
 	cd $(TESTDIR) && coverage run $(TESTFILE)
 	@mv $(TESTDIR)/.coverage .
@@ -43,6 +46,9 @@ clean :
 # For example, when working remotely, sync output via Dropbox to inspect locally
 DUMPPATH = "/home/simongh/Dropbox (MIT)/htmldump"
 mydocs : docs
+	cp -r $(SPHINXBUILD)/* $(DUMPPATH)/sphinx
+
+mydocs-latex : docs-latex
 	cp -r $(SPHINXBUILD)/* $(DUMPPATH)/sphinx
 
 mytests : tests
