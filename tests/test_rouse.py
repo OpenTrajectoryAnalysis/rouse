@@ -49,6 +49,9 @@ class TestModel(myTestCase):
         mod.update_F_only(override_full_update=True)
         mod.check_dynamics(run_if_necessary=False)
 
+        mod = rouse.Model(1)
+        self.assert_array_equal(mod.A, np.array([[0.]]))
+
     def test_operators(self):
         self.assertTrue(self.model == self.model_nosetup)
         self.model_nosetup.F[-1] = 1

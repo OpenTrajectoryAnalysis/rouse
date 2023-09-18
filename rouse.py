@@ -167,10 +167,13 @@ class Model:
         """
         self._dynamics['needs_updating'] = True
 
-        self.A = np.diagflat(self.N*[2.], k=0) \
-                 + np.diagflat((self.N-1)*[-1.], k=-1) \
-                 + np.diagflat((self.N-1)*[-1.], k= 1)
-        self.A[0, 0] = self.A[-1, -1] = 1
+        if self.N == 1:
+            self.A = np.zeros((1, 1), dtype=float)
+        else:
+            self.A = np.diagflat(self.N*[2.], k=0) \
+                     + np.diagflat((self.N-1)*[-1.], k=-1) \
+                     + np.diagflat((self.N-1)*[-1.], k= 1)
+            self.A[0, 0] = self.A[-1, -1] = 1
         
         self.F = np.zeros((self.N, d))
 
