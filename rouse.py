@@ -230,7 +230,7 @@ class Model:
         self._dynamics['needs_updating'] = True
         
         self.A[mon, mon] += k_rel
-        self.F[mon] += k_rel * point
+        self.F[mon] += self.k * k_rel * point
 
     def update_dynamics(self, dt=1.):
         """
