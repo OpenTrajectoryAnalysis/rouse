@@ -558,7 +558,8 @@ class Model:
             self.check_dynamics(dt, run_if_necessary=True)
         B = self._dynamics['B']
         L = self._dynamics['LSig']
-        return B @ conf + L @ np.random.normal(size=conf.shape)
+        G = self._dynamics['G']
+        return B @ conf + L @ np.random.normal(size=conf.shape) + G
 
 ####### MSD and related stuff
 
